@@ -8,8 +8,10 @@
 class MyApp : public wxApp
 {
 public:
-    virtual bool OnInit();
+    bool OnInit() override;
 };
+
+wxIMPLEMENT_APP(MyApp);
 
 class MyFrame : public wxFrame
 {
@@ -27,8 +29,15 @@ enum
     ID_Hello = 1
 };
 
+bool MyApp::OnInit()
+{
+    MyFrame *frame = new MyFrame();
+    frame->Show(true);
+    return true;
+}
+
 MyFrame::MyFrame()
-    : wxFrame(NULL, wxID_ANY, "Hello World")
+    : wxFrame(nullptr, wxID_ANY, "Hello World")
 {
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
@@ -47,13 +56,24 @@ MyFrame::MyFrame()
 
     CreateStatusBar();
     SetStatusText("Welcome to wxWidgets!");
+
+    Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
+    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
 }
 
-bool MyApp::OnInit()
+void MyFrame::OnExit(wxCommandEvent &event)
 {
-    MyFrame *frame = new MyFrame();
-    frame->Show(true);
-    return true;
+    Close(true);
 }
 
-wxIMPLEMENT_APP(MyApp);
+void MyFrame::OnAbout(wxCommandEvent &event)
+{
+    wxMessageBox("This is a wxWidgets Hello World example",
+                 "About Hello World", wxOK | wxICON_INFORMATION);
+}
+
+void MyFrame::OnHello(wxCommandEvent &event)
+{
+    wxLogMessage("Hello world from wxWidgets!");
+}
