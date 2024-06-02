@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.26)
 # Указываем имя проекта и версию
 project(Calc VERSION 1.0)
 
-set(CMAKE_CXX_STANDART 11)
+set(CMAKE_CXX_STANDART 23)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
@@ -15,9 +15,10 @@ include(${wxWidgets_USE_FILE})
 
 # Добавляем исполняемый файл
 add_executable(${PROJECT_NAME}
-    src/main.cpp
-    src/equation.cpp
-    src/solver.cpp
+        src/main.cpp
+        src/equation.cpp
+        src/solver.cpp
+        src/mainframe.cpp
 )
 
 # Устанавливаем флаги компиляции и линковки
