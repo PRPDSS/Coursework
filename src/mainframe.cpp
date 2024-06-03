@@ -1,31 +1,34 @@
 #include "mainframe.h"
-#include <wx/spinctrl.h>
-#include <wx/wxprec.h>
 #include <cfloat>
 
-
 enum {
-    ID_Hello = 1,
+    ID_Button = 1,
 };
 
 MainFrame::MainFrame()
         : wxFrame(nullptr, wxID_ANY, "Решала", wxDefaultPosition, wxDefaultSize) {
 
     wxStaticText *text = new wxStaticText(this, wxID_ANY,
-                                          "Для решения уравнения вида\nax² + bx + c = 0\nвведите его коэффициенрты ниже:",
+                                          "Для решения уравнения вида\nax² + bx + c = 0\nвведите его коэффициенты ниже:",
                                           wxPoint((GetSize().GetWidth() >> 1) - 100, 20),
                                           wxSize(200, 60));
 
-    wxPanel *inputPanel = new wxPanel(this, wxID_ANY, wxPoint(0, 80), wxSize(GetSize().GetWidth(), 20));
+    wxPanel *inputPanel = new wxPanel(this, wxID_ANY, wxPoint((GetSize().GetWidth() >> 1) - 172, 80), wxSize(345, 20));
+
     // литеры
-    wxStaticText *textA = new wxStaticText(inputPanel, wxID_ANY, "a:", wxPoint((GetSize().GetWidth() >> 1) - 160, 0));
-    // MARK: кнопки ввода значений
-    wxSpinCtrlDouble *numSelectorA = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
-                                                          wxPoint((GetSize().GetWidth() >> 1) - 140, 0), wxSize(100, 20));
-    wxSpinCtrlDouble *numSelectorB = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
-                                                          wxPoint((GetSize().GetWidth() >> 1) - 20, 0), wxSize(100, 20));
-    wxSpinCtrlDouble *numSelectorC = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
-                                                          wxPoint((GetSize().GetWidth() >> 1) + 100, 0), wxSize(100, 20));
+    wxStaticText *textA = new wxStaticText(inputPanel, wxID_ANY, "a:", wxPoint(0, 0));
+    wxStaticText *textB = new wxStaticText(inputPanel, wxID_ANY, "b:", wxPoint(115, 0));
+    wxStaticText *textC = new wxStaticText(inputPanel, wxID_ANY, "c:", wxPoint(230, 0));
+    // кнопки ввода значений
+    numSelectorA = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
+                                        wxPoint(13, 0),
+                                        wxSize(100, 20));
+    numSelectorB = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
+                                        wxPoint(128, 0),
+                                        wxSize(100, 20));
+    numSelectorC = new wxSpinCtrlDouble(inputPanel, wxID_ANY, wxEmptyString,
+                                        wxPoint(243, 0),
+                                        wxSize(100, 20));
     numSelectorA->SetRange(-DBL_MAX, DBL_MAX);
     numSelectorA->SetDigits(5);
     numSelectorB->SetRange(-DBL_MAX, DBL_MAX);
@@ -33,9 +36,10 @@ MainFrame::MainFrame()
     numSelectorC->SetRange(-DBL_MAX, DBL_MAX);
     numSelectorC->SetDigits(5);
 
-    wxButton *getNumsButton = new wxButton(this, wxID_ANY, "Вычислить", wxPoint((GetSize().GetWidth() >> 1) - 40, 120),
+    wxButton *getNumsButton = new wxButton(this, ID_Button, "Вычислить", wxPoint((GetSize().GetWidth() >> 1) - 40, 120),
                                            wxSize(80, 20));
 
+    resultText = new wxStaticText(this, wxID_ANY, "", wxPoint((GetSize().GetWidth() >> 1) - 100, 160), wxSize(200, 60));
 
     wxMenu *menuHelp = new wxMenu;
     menuHelp->Append(wxID_ABOUT);
@@ -47,6 +51,7 @@ MainFrame::MainFrame()
 
     Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MainFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_BUTTON, &MainFrame::GetValuesAndSolve, this, ID_Button);
 }
 
 void MainFrame::OnExit(wxCommandEvent &event) {
@@ -58,4 +63,18 @@ void MainFrame::OnAbout(wxCommandEvent &event) {
     wxMessageBox(
             "Программа написана в рамках курсовой работы 2 семестра.\nРазработчик - Богданов М.А.\nmail: prpdss@gmail.com \ntelegram: t.me/parapidosius",
             "О приложении", wxOK | wxICON_INFORMATION);
+}
+
+void MainFrame::GetValuesAndSolve(wxCommandEvent &event) {
+    double a = numSelectorA->GetValue();
+    double b = numSelectorB->GetValue();
+    double c = numSelectorC->GetValue();
+    Equation e(a, b, c);
+
+    auto [x1, x2, hasRealRoots] = Solver::solve(e);
+    if (hasRealRoots) {
+        resultText->SetLabel(wxString::Format("Корни уравнения:\nx1 = %.5f\nx2 = %.5f", x1, x2));
+    } else {
+        resultText->SetLabel("У уравнения нет действительных корней.");
+    }
 }

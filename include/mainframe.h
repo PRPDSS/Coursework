@@ -1,22 +1,24 @@
-//
-// Created by Максим Богданов on 02.06.2024.
-//
+#ifndef MAINFRAME_H
+#define MAINFRAME_H
+
 #include <wx/wx.h>
+#include <wx/spinctrl.h>
+#include "equation.h"
 #include "solver.h"
 
-#ifndef CALC_MAINFRAME_H
-#define CALC_MAINFRAME_H
-#endif //CALC_MAINFRAME_H
-
-class MainFrame : public wxFrame
-{
+class MainFrame : public wxFrame {
 public:
     MainFrame();
 
 private:
-    Solver s();
-    Equation eq();
+    wxSpinCtrlDouble* numSelectorA;
+    wxSpinCtrlDouble* numSelectorB;
+    wxSpinCtrlDouble* numSelectorC;
+    wxStaticText* resultText;
 
-    void OnExit(wxCommandEvent &event);
-    void OnAbout(wxCommandEvent &event);
+    void OnExit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent& event);
+    void GetValuesAndSolve(wxCommandEvent& event);
 };
+
+#endif // MAINFRAME_H
