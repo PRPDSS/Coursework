@@ -7,7 +7,7 @@
 
 class Solver {
 public:
-    static std::tuple<double, double, bool> solve(const Equation& eq);
+    static std::tuple<double, double, uint> solve(const Equation& eq);
 };
 
 #endif // SOLVER_H

@@ -1,4 +1,5 @@
 #include "mainframe.h"
+#include <iostream>
 #include <cfloat>
 
 enum {
@@ -41,11 +42,14 @@ MainFrame::MainFrame()
 
     resultText = new wxStaticText(this, wxID_ANY, "", wxPoint((GetSize().GetWidth() >> 1) - 100, 160), wxSize(200, 60));
 
+    wxMenu *menuAbout = new wxMenu;
+    menuAbout->Append(wxID_ABOUT);
+
     wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT);
 
     wxMenuBar *menuBar = new wxMenuBar;
-    menuBar->Append(menuHelp, "&Help");
+    menuBar->Append(menuAbout, "&Help");
+
 
     SetMenuBar(menuBar);
 
@@ -61,20 +65,34 @@ void MainFrame::OnExit(wxCommandEvent &event) {
 // Окно "о приложении"
 void MainFrame::OnAbout(wxCommandEvent &event) {
     wxMessageBox(
-            "Программа написана в рамках курсовой работы 2 семестра.\nРазработчик - Богданов М.А.\nmail: prpdss@gmail.com \ntelegram: t.me/parapidosius",
+            "Программа написана в рамках курсовой работы 2 семестра.\n\nРазработчик - Богданов М.А.\n\nemail: prpdss@gmail.com \ntelegram: t.me/parapidosius",
             "О приложении", wxOK | wxICON_INFORMATION);
 }
 
+void MainFrame::OnHelp(wxCommandEvent &event) {
+    wxMessageBox("", "Справка по использованию");
+}
+
 void MainFrame::GetValuesAndSolve(wxCommandEvent &event) {
+    clock_t startTime, endTime;
     double a = numSelectorA->GetValue();
     double b = numSelectorB->GetValue();
     double c = numSelectorC->GetValue();
     Equation e(a, b, c);
 
-    auto [x1, x2, hasRealRoots] = Solver::solve(e);
-    if (hasRealRoots) {
-        resultText->SetLabel(wxString::Format("Корни уравнения:\nx1 = %.5f\nx2 = %.5f", x1, x2));
-    } else {
-        resultText->SetLabel("У уравнения нет действительных корней.");
+    startTime = clock();
+    auto [x1, x2, numberOfRoots] = Solver::solve(e);
+    endTime = clock();
+    switch (numberOfRoots) {
+        case 2:
+            resultText->SetLabel(wxString::Format("Корни уравнения:\nx1 = %.5f\nx2 = %.5f", x1, x2));
+            break;
+        case 1:
+            resultText->SetLabel(wxString::Format("Корень уравнения:\nx = %.5f", x1));
+            break;
+        default:
+            resultText->SetLabel("Нет действительных корней");
+            break;
     }
+    std::cout << "Root search time: " << (endTime - startTime) / double(CLOCKS_PER_SEC) << "sec." << std::endl;
 }

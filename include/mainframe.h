@@ -11,14 +11,18 @@ public:
     MainFrame();
 
 private:
-    wxSpinCtrlDouble* numSelectorA;
-    wxSpinCtrlDouble* numSelectorB;
-    wxSpinCtrlDouble* numSelectorC;
-    wxStaticText* resultText;
+    wxSpinCtrlDouble *numSelectorA;
+    wxSpinCtrlDouble *numSelectorB;
+    wxSpinCtrlDouble *numSelectorC;
+    wxStaticText *resultText;
 
-    void OnExit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void GetValuesAndSolve(wxCommandEvent& event);
+    void OnExit(wxCommandEvent &event);
+
+    void OnAbout(wxCommandEvent &event);
+
+    void OnHelp(wxCommandEvent &event);
+
+    void GetValuesAndSolve(wxCommandEvent &event);
 };
 
 #endif // MAINFRAME_H
