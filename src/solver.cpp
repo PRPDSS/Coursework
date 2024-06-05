@@ -10,7 +10,7 @@ std::tuple<double, double, uint> Solver::solve(const Equation &eq) {
 
     if (a == 0) {
         if (b == 0) {
-            return std::make_tuple(0, 0, 0); // Не уравнение
+            return std::make_tuple(0, 0, c == 0? 3 : 0); // c = 0?
         } else {
             // Линейное уравнение: bx + c = 0
             double root = -c / b;

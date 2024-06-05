@@ -84,11 +84,14 @@ void MainFrame::GetValuesAndSolve(wxCommandEvent &event) {
     auto [x1, x2, numberOfRoots] = Solver::solve(e);
     endTime = clock();
     switch (numberOfRoots) {
+        case 1:
+            resultText->SetLabel(wxString::Format("Корень уравнения:\nx = %.5f", x1));
+            break;
         case 2:
             resultText->SetLabel(wxString::Format("Корни уравнения:\nx1 = %.5f\nx2 = %.5f", x1, x2));
             break;
-        case 1:
-            resultText->SetLabel(wxString::Format("Корень уравнения:\nx = %.5f", x1));
+        case 3:
+            resultText->SetLabel(wxString::Format("Любое число удовлетворяет решению\"0 == 0\""));
             break;
         default:
             resultText->SetLabel("Нет действительных корней");
