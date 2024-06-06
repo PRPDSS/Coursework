@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.26)
 # Указываем имя проекта и версию
 project(Calc VERSION 1.0)
 
-set(CMAKE_CXX_STANDART 23)
+set(CMAKE_CXX_STANDART 17)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
 find_package(wxWidgets REQUIRED COMPONENTS net core base)

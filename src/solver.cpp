@@ -14,6 +14,7 @@ std::tuple<double, double, uint> Solver::solve(const Equation &eq) {
         } else {
             // Линейное уравнение: bx + c = 0
             double root = -c / b;
+            if (!root) root = 0;
             return std::make_tuple(root, root, 1);
         }
     }
